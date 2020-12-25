@@ -4,14 +4,13 @@ let router = require('./router');
 const logger = require('koa-logger');
 const koaBody = require('koa-body');
 const serve = require('koa-static');
+const compose = require('koa-compose');
+const middlewareFile = require('./app/middleware');
 const path = require('path');
 // 创建koa的实例app
 const app = new Koa();
 
 //    app.use(router.middleware);
-
-//控制台输出日志
-app.use(logger());
 
 //post 请求参数解析，文件上传
 app.use(
@@ -38,38 +37,23 @@ app.use(
 //静态文件夹
 app.use(serve(path.join(__dirname, 'public')));
 
-//中间件
-app.use(async (ctx, next) => {
-  await next();
 
-  const rt = ctx.response.get('X-Response-Time');
-  console.log(`${ctx.method} ${ctx.url}-${rt}`);
-});
+//统一设置中间件
+const { ignoreAssets,setTime, getTime, respond } = middlewareFile;
+//控制台输出日志--忽略相关文件
+const ignore =ignoreAssets(logger())
+const allMiddle = compose([setTime, getTime, respond,ignore]);
+app.use(allMiddle);
 
-app.use(async (ctx, next) => {
-  const start = new Date();
-
-  let rst = await next();
-  console.log(rst);
-  const ms = Date.now() - start;
-  ctx.set('X-Response-Time', `${ms}ms`);
-});
-
-app.use(async (ctx) => {
-  ctx.body = 'Hello World!';
-  ctx.cookies.set('name', 'tobi', { signed: true });
-
-  console.log(`${ctx.cookies.get('name.sig')}`);
-  return '返回值 ： success';
-});
-// 监听端口
-//    debugger;
+//设置cookies
 app.keys = ['im a newer secret', 'i like turtle'];
 
+//应用级错误
 app.on('error', (err) => {
-  console.log('server error', err);
+    console.log('server error', err);
 });
 
+// 监听端口
 app.listen(3000, () => {
   console.log('服务器已启动，http://localhost:3000');
 });
