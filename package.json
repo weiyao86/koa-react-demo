@@ -1,0 +1,21 @@
+{
+  "name": "KoaDemo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.0",
+    "koa-better-router": "^2.1.1",
+    "koa-body": "^4.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-static": "^5.0.0",
+    "require-all": "^3.0.0"
+  }
+}
