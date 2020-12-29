@@ -29,11 +29,12 @@ module.exports = {
   },
 
   async respond(ctx, next) {
-    ctx.body = 'Hello World!';
+    // ctx.body = 'Hello World!';
     ctx.cookies.set('name', 'tobi', { signed: true });
 
     console.log(`${ctx.cookies.get('name.sig')}`);
-    return '返回值 ： success';
+    // return '返回值 ： success';
+    return next();
   },
 
 

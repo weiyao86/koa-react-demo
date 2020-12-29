@@ -5,12 +5,11 @@ const logger = require('koa-logger');
 const koaBody = require('koa-body');
 const serve = require('koa-static');
 const compose = require('koa-compose');
+const views = require('koa-views');
 const middlewareFile = require('./app/middleware');
 const path = require('path');
 // 创建koa的实例app
 const app = new Koa();
-
-//    app.use(router.middleware);
 
 //post 请求参数解析，文件上传
 app.use(
@@ -35,22 +34,31 @@ app.use(
 );
 
 //静态文件夹
-app.use(serve(path.join(__dirname, 'public')));
-
+app.use(serve(path.join(__dirname, './public')));
+//设置模板目录，ejs引擎
+app.use(
+  views(path.join(__dirname, './app/views'), {
+    map: {
+      html: 'ejs',
+    },
+    extension: 'html',
+  })
+);
 
 //统一设置中间件
-const { ignoreAssets,setTime, getTime, respond } = middlewareFile;
+const { ignoreAssets, setTime, getTime, respond } = middlewareFile;
 //控制台输出日志--忽略相关文件
-const ignore =ignoreAssets(logger())
-const allMiddle = compose([setTime, getTime, respond,ignore]);
-app.use(allMiddle);
+const ignore = ignoreAssets(logger());
+const allMiddle = compose([setTime, getTime, respond, ignore]);
+// app.use(allMiddle)
+app.use(router.middleware());
 
 //设置cookies
 app.keys = ['im a newer secret', 'i like turtle'];
 
 //应用级错误
 app.on('error', (err) => {
-    console.log('server error', err);
+  console.log('server error', err);
 });
 
 // 监听端口
@@ -58,6 +66,6 @@ app.listen(3000, () => {
   console.log('服务器已启动，http://localhost:3000');
 });
 
-app.listen(4000, () => {
-  console.log('服务器已启动，http://localhost:4000');
-});
+// app.listen(4000, () => {
+//   console.log('服务器已启动，http://localhost:4000');
+// });
