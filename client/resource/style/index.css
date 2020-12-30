@@ -1,0 +1,10 @@
+html,body{
+    padding: 0;
+    margin: 0;
+}
+.wrap{
+    border:2px solid #ccc;
+    padding:40px;
+    background:url('../image/test.png')no-repeat center/cover #ddd;
+    color:#f00;
+}
