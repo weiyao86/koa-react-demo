@@ -6,10 +6,26 @@ const koaBody = require('koa-body');
 const serve = require('koa-static');
 const compose = require('koa-compose');
 const views = require('koa-views');
+const koaWebpack = require('koa-webpack');
 const middlewareFile = require('./app/middleware');
 const path = require('path');
+const webpackCng = require('./config/webpack.config.prod');
+const webpack = require('webpack');
+
 // 创建koa的实例app
 const app = new Koa();
+
+//静态文件夹,并指定首页
+app.use(serve(path.join(__dirname, './public'),{index:'index.html'}));
+//设置模板目录，ejs引擎
+app.use(
+  views(path.join(__dirname, './app/views'), {
+    map: {
+      html: 'ejs',
+    },
+    extension: 'html',
+  })
+);
 
 //post 请求参数解析，文件上传
 app.use(
@@ -33,23 +49,13 @@ app.use(
   })
 );
 
-//静态文件夹
-app.use(serve(path.join(__dirname, './public')));
-//设置模板目录，ejs引擎
-app.use(
-  views(path.join(__dirname, './app/views'), {
-    map: {
-      html: 'ejs',
-    },
-    extension: 'html',
-  })
-);
-
 //统一设置中间件
 const { ignoreAssets, setTime, getTime, respond } = middlewareFile;
+
 //控制台输出日志--忽略相关文件
 const ignore = ignoreAssets(logger());
 const allMiddle = compose([setTime, getTime, respond, ignore]);
+
 // app.use(allMiddle)
 app.use(router.middleware());
 
@@ -65,7 +71,3 @@ app.on('error', (err) => {
 app.listen(3000, () => {
   console.log('服务器已启动，http://localhost:3000');
 });
-
-// app.listen(4000, () => {
-//   console.log('服务器已启动，http://localhost:4000');
-// });

@@ -16,7 +16,7 @@ const wrapHttp = {
 
 // wrapHttp.get('/*', controller.base.index);
 // wrapHttp.post('/*', controller.base.index);
-router.get('/*', controller.base.index);
+// router.get('/*', controller.base.index);
 
 router.get(
   '/*',
