@@ -2,7 +2,8 @@
 module.exports = {
   //忽略文件
   ignoreAssets(mw) {
-    return async function(ctx, next) {
+    return async function (ctx, next) {
+
       if (/(\.js|\.css|\.ico)$/.test(ctx.path)) {
         await next();
       } else {

@@ -33,6 +33,24 @@ webpackCng.entry.main.unshift(`webpack-hot-client/client?whc_${new Date().getTim
 // webpackCng.entry.main.unshift('react-hot-loader/patch');
 
 const compiler = webpack(webpackCng);
+
+// new webpack.ProgressPlugin().apply(compiler);
+
+// compiler.run(function (err, stats) {
+//   console.log("**********************")
+//   console.log(stats)
+//   console.log(err)
+//   console.log('======================')
+// });
+
+new webpack.ProgressPlugin((percentage, message, ...args) => {
+  // console.log("**********************")
+  // console.log(+percentage * 100 + '%', message);
+  // console.log(message);
+  // console.log([...args]);
+  // console.log('======================')
+}).apply(compiler)
+
 koaWebpack({
   compiler, //or configPath path.join(__dirname, 'client', 'webpack.config.js')
   devMiddleware: {
@@ -53,7 +71,9 @@ koaWebpack({
     // HTTPS: true,
   },
 }).then((middleware) => {
+
   app.use(middleware);
+
 
   //post 请求参数解析，文件上传
   app.use(
@@ -84,17 +104,19 @@ koaWebpack({
   const ignore = ignoreAssets(logger());
   const allMiddle = compose([setTime, getTime, respond, ignore]);
 
-  // app.use(allMiddle)
+  app.use(allMiddle)
   app.use(router.middleware());
 
   app.use((ctx, next) => {
+
     // 如果路由中间件已经有数据了，无需再走静态文件中间件了
     if (ctx.body) {
       return true;
     }
     return next();
   });
-  
+
+
 });
 
 //设置cookies
@@ -106,6 +128,6 @@ app.on('error', (err) => {
 });
 
 // 监听端口
-app.listen(3000, () => {
-  console.log('服务器已启动，http://localhost:3000');
+app.listen(3001, () => {
+  console.log('服务器已启动，http://localhost:3001');
 });
