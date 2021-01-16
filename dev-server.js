@@ -29,7 +29,7 @@ app.use(
 
 // 将 webpack.config.base.js 配置文件作为基础配置
 // koa-webpack-dev-middleware 是一个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server,保存在内存中，开发环境使用
-webpackCng.entry.main.unshift(`webpack-hot-client/client?whc_${new Date().getTime()}`);
+// webpackCng.entry.main.unshift(`webpack-hot-client/client?whc_${new Date().getTime()}`);
 // webpackCng.entry.main.unshift('react-hot-loader/patch');
 
 const compiler = webpack(webpackCng);
@@ -43,13 +43,14 @@ const compiler = webpack(webpackCng);
 //   console.log('======================')
 // });
 
-new webpack.ProgressPlugin((percentage, message, ...args) => {
-  // console.log("**********************")
-  // console.log(+percentage * 100 + '%', message);
-  // console.log(message);
-  // console.log([...args]);
-  // console.log('======================')
-}).apply(compiler)
+// new webpack.ProgressPlugin((percentage, message, ...args) => {
+//   // console.log("**********************")
+//   // console.log(+percentage * 100 + '%', message);
+//   // console.log(message);
+//   // console.log([...args]);
+//   // console.log('======================')
+//   // console.info(percentage, message, ...args);
+// }).apply(compiler)
 
 koaWebpack({
   compiler, //or configPath path.join(__dirname, 'client', 'webpack.config.js')
@@ -61,8 +62,8 @@ koaWebpack({
   },
   //热更新
   hotClient: {
-    allEntries: false,
-    autoConfigure: false,
+    allEntries: true,
+    autoConfigure: true,
     logTime: true,
     logLevel: 'error',
     // host: '127.0.0.1',
@@ -70,7 +71,7 @@ koaWebpack({
     // server: app,
     // HTTPS: true,
   },
-}).then((middleware) => {
+}).then((middleware, ...args) => {
 
   app.use(middleware);
 
@@ -120,7 +121,7 @@ koaWebpack({
 });
 
 //设置cookies
-app.keys = ['im a newer secret', 'i like turtle'];
+app.keys = ['im a newer secret', 'i like turtle2'];
 
 //应用级错误
 app.on('error', (err) => {

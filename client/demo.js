@@ -1,2 +1,2 @@
-console.log('****adfasf*////*')
-// throw new Error('error')
+console.log('demo.deomtes');
+throw new Error('error')
