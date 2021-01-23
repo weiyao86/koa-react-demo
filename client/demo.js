@@ -1,2 +1,2 @@
 console.log('demo.deomtes');
-throw new Error('error')
+// throw new Error('error')

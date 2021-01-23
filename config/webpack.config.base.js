@@ -81,12 +81,19 @@ module.exports = {
   context: path.resolve(__dirname, '../client'),
   //动态入口 （暂时没用--）
   // entry: () => ({ main: ['./index.js'], demo: ['./test.js'] }),
-  entry: { main: ['./index.js'], demo: ['./test.js'] },
+  entry: {
+    // main: ['react-hot-loader/patch', './index.js']   //使用koa-webpack后带有热更新配置，此处禁用
+    main: ['./index.js']
+  },
   output: {
-    filename: '[name].[contenthash].js',
+    filename: IS_PROD ? '[name].[contenthash:10].js' : '[name].[hash:10].js',    //'[name].[contenthash].js',
     path: path.resolve(__dirname, '../public'),
     //生产环境相对css,js路径
     publicPath: IS_PROD ? './' : '/'
+  },
+
+  externals: {
+    jquery: "jQuery",
   },
 
   //配置.css,.scss,.less
@@ -144,7 +151,15 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: ['file-loader'],
       },
+      {
+        test: /\.(js|jsx)$/,
+        use: "babel-loader",
+        exclude: /node_modules/
+      }
     ],
+  },
+  resolve: {
+    extensions: ['*', '.js', '.jsx']
   },
   //创建web服务，缓存在内存中，改变文件自动更新
   // devServer:{
@@ -161,10 +176,15 @@ module.exports = {
       chunks: 'all', // all, async, initial 三选一, 插件作用的chunks范围// initial只对入口文件处理
       name: 'chunk',
       cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
+        // vendor: {
+        //   test: /[\\/]node_modules[\\/]/,
+        //   name: 'chunk-vendors',
+        //   chunks: 'all'
+        // },
+        jquery: {
+          name: "chunk-jquery", // 单独将 jquery 拆包
+          priority: 1, // 数字大权重到，满足多个 cacheGroups 的条件时候分到权重高的
+          test: /[\\/]node_modules[\\/]_?jquery(.*)/
         }
 
       }
@@ -172,11 +192,18 @@ module.exports = {
     runtimeChunk: 'single'
   },
   plugins: [
+    //给模块取个别名，用的地方无需引入了eg:   ...自动解析引入
+    // new webpack.ProvidePlugin({
+    //   $: 'jquery'
+    // }),
     //指定生成页
     new HtmlWebpackPlugin({
       title: 'Webpack-title',
       filename: 'index.html',
       template: path.resolve(__dirname, '../client/components/layout/index.html'),
+      //指定引入的资源文件，默认entry入口 ，如多页面可指定不同chunks
+      // chunks: ['main'],
+      inject: 'body',
       minify: {
         //开发环境下禁用
         collapseWhitespace: IS_PROD, // 去除html的换行

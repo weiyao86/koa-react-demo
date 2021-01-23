@@ -7,6 +7,7 @@ module.exports = {
       },
       stage: 3,
     }),
-    require('postcss-normalize')()
+    require('postcss-normalize')(),
+    require('cssnano')({ preset: ['default', { discardComments: { removeAll: true } }] }) //压缩css，去除所有注释
   ]
 }

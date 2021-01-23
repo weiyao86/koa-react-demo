@@ -15,13 +15,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <!-- <link rel="icon" type="image/x-icon" href="<%=htmlWebpackPlugin.options.staticPath%>/static/images/favicon.ico" /> -->
     <title>React<%= htmlWebpackPlugin.options.title %></title>
+   <!--[if lt IE 9]>
+       <script src="https://cdn.bootcdn.net/ajax/libs/html5shiv/r29/html5.min.js"></script>
+   <![endif]-->
 </head>
 
 <body>
-    <div class="wrap">
+    <div id="app">
         React--demo-test--555555555
         <div>test--wrap</div>
     </div>
+ 
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+    <script>
+      if (!window.Set || !window.Map) {
+        var jsList=[
+        "https://cdn.bootcdn.net/ajax/libs/console-polyfill/0.3.0/index.min.js",  
+        "https://cdn.bootcdn.net/ajax/libs/es5-shim/4.5.15/es5-shim.min.js",
+        "https://cdn.bootcdn.net/ajax/libs/es5-shim/4.5.15/es5-sham.min.js",
+        "https://cdn.bootcdn.net/ajax/libs/es6-shim/0.35.6/es6-shim.min.js",
+        "https://cdn.bootcdn.net/ajax/libs/es6-shim/0.35.6/es6-sham.min.js"];
+        var scriptEl;
+        for(var i=0;i<jsList.length;i++){
+             scriptEl = document.createElement("script");
+             scriptEl.src=jsList[i];
+             document.body.appendChild(scriptEl);
+        }
+    }
+    </script>
 </body>
 
 </html>

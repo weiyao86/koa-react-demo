@@ -4,7 +4,7 @@
 // // @hot(module)
 // console.log('MAINaaaaatesbbb')
 // console.warn('tets')
-// console.warn('demo.js')
+console.warn('demo.js')
 // alert('d')
 // //配置热更新模块，无刷新[需配置devServer]
 // if (module.hot) {

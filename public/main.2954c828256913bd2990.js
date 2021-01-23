@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[2],[function(o,n,e){o.exports=e(4)},function(o,n){throw console.log("demo.deomtes"),new Error("error")},,,function(o,n,e){"use strict";e.r(n);e(1);console.log("index.jssafa"),console.log("test.jabcdafas")}],[[0,0]]]);
-//# sourceMappingURL=main.2954c828256913bd2990.js.map
