@@ -4,7 +4,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBar = require('webpackbar');
 const fs = require('fs');
 const path = require('path');
+const webpack = require('webpack');
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
+const ClientDir = path.resolve(__dirname, '../client');
 
 console.log('****************process.env.NODE_ENV**********')
 console.log(process.env.NODE_ENV)
@@ -78,12 +80,12 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
 
 module.exports = {
   // 基础目录，绝对路径，用于从配置中解析入口起点(entry point)和 loader
-  context: path.resolve(__dirname, '../client'),
+  context: ClientDir,
   //动态入口 （暂时没用--）
   // entry: () => ({ main: ['./index.js'], demo: ['./test.js'] }),
   entry: {
     // main: ['react-hot-loader/patch', './index.js']   //使用koa-webpack后带有热更新配置，此处禁用
-    main: ['./index.js']
+    main: ['./app.js']
   },
   output: {
     filename: IS_PROD ? '[name].[contenthash:10].js' : '[name].[hash:10].js',    //'[name].[contenthash].js',
@@ -159,7 +161,10 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx'],
+    alias: {
+      '@': ClientDir
+    }
   },
   //创建web服务，缓存在内存中，改变文件自动更新
   // devServer:{
@@ -193,9 +198,9 @@ module.exports = {
   },
   plugins: [
     //给模块取个别名，用的地方无需引入了eg:   ...自动解析引入
-    // new webpack.ProvidePlugin({
-    //   $: 'jquery'
-    // }),
+    new webpack.ProvidePlugin({
+      React: 'react'
+    }),
     //指定生成页
     new HtmlWebpackPlugin({
       title: 'Webpack-title',

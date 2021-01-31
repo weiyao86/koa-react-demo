@@ -1,13 +1,12 @@
 const requireAll = require('require-all');
 const router = require('koa-better-router')().loadMethods();
 
-const controller = requireAll(__dirname + '/app/controller');
 
-const backUrl = 'http://10.10.100.233:8431/api/';
+const backUrl = '/';
 
 const wrapHttp = {
   get(url, api) {
-    router.get(`${backUrl + url}`,api);
+    router.get(`${backUrl + url}`, api);
   },
   post(url, api) {
     router.post(`${backUrl + url}`, api);
@@ -15,16 +14,26 @@ const wrapHttp = {
 };
 
 // wrapHttp.get('/*', controller.base.index);
-// wrapHttp.post('/*', controller.base.index);
-// router.get('/*', controller.base.index);
+router.get('/redirect', async (ctx, next) => {
+
+  console.log('***************redirect***************');
+  await ctx.render('index')
+}, async (ctx, next) => {
+
+  console.log('***************hahahahal***************');
+  ctx.body = "hahahahal................"
+  next();
+});
 
 router.get(
   '/*',
   (ctx, next) => {
-    console.log('***************global***************');
+
+    if (ctx.url.indexOf('/favicon.ico') > -1) {
+      return true;
+    }
     return next();
-  },
-  controller.base.index
+  }
 );
 
 module.exports = router;

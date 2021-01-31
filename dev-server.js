@@ -3,6 +3,7 @@ const Koa = require('koa');
 let router = require('./router');
 const logger = require('koa-logger');
 const koaBody = require('koa-body');
+const session = require('koa-session');
 const serve = require('koa-static');
 const compose = require('koa-compose');
 const views = require('koa-views');
@@ -15,17 +16,26 @@ const webpack = require('webpack');
 // 创建koa的实例app
 const app = new Koa();
 
+const CONFIG = {
+  key: 'koa.sess', /** (string) cookie key (default is koa.sess) */
+  /** (number || 'session') maxAge in ms (default is 1 days) */
+  /** 'session' will result in a cookie that expires when session/browser is closed */
+  /** Warning: If a session cookie is stolen, this cookie will never expire */
+  maxAge: 86400000,
+  autoCommit: true, /** (boolean) automatically commit headers (default true) */
+  overwrite: true, /** (boolean) can overwrite or not (default true) */
+  httpOnly: true, /** (boolean) httpOnly or not (default true) */
+  signed: true, /** (boolean) signed or not (default true) */
+  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
+  renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
+  secure: true, /** (boolean) secure cookie*/
+  sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
+};
+//session
+app.use(session(CONFIG, app));
 //静态文件夹
 app.use(serve(path.join(__dirname, './public')));
-//设置模板目录，ejs引擎
-app.use(
-  views(path.join(__dirname, './app/views'), {
-    map: {
-      html: 'ejs',
-    },
-    extension: 'html',
-  })
-);
+
 
 // 将 webpack.config.base.js 配置文件作为基础配置
 // koa-webpack-dev-middleware 是一个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server,保存在内存中，开发环境使用
@@ -105,8 +115,21 @@ koaWebpack({
   const ignore = ignoreAssets(logger());
   const allMiddle = compose([setTime, getTime, respond, ignore]);
 
-  app.use(allMiddle)
-  app.use(router.middleware());
+  // app.use(allMiddle)
+  // app.use(router.middleware());
+  //设置模板目录，ejs引擎
+  console.log(path.join(__dirname, './app/views'))
+  app.use(
+    views(path.join(__dirname, './app/views'), {
+      map: {
+        html: 'ejs',
+      },
+      extension: 'html',
+    })
+  );
+
+  app.use((ctx, next) => router.middleware()(ctx, next));
+  // app.use((ctx, next) => router.middleware()(ctx, next));
 
   app.use((ctx, next) => {
 
@@ -120,6 +143,45 @@ koaWebpack({
 
 });
 
+// app.use(async (ctx) => {
+//   // let url = ctx.url;
+//   // console.log('i am come in')
+//   // //从request中获取GET请求
+//   // let request = ctx.request;
+//   // let req_query = request.query;
+//   // let req_querystring = request.querystring;
+
+//   // //从上下文中直接获取
+//   // let ctx_query = ctx.query;
+//   // let ctx_querystring = ctx.querystring;
+
+//   // ctx.body = {
+//   //   ctx
+//   // }
+//   //get获得表单页面
+//   if (ctx.url === '/' && ctx.method === 'GET') {
+//     let html = `
+//             <h1>Koa2 request POST</h1>
+//             <form method="POST" action="/">
+//                 <p>userName</p>
+//                 <input name="userName" /><br/>
+//                 <p>age</p>
+//                 <input name="age" /><br/>
+//                 <button type="submit">submit</button>
+//             </form>
+//         `;
+//     ctx.body = html;
+//   }
+//   //post提交表单信息
+//   else if (ctx.url === '/' && ctx.method === 'POST') {
+//     let pastData = await parsePostData(ctx);
+//     ctx.body = pastData;
+//   }
+//   else {
+//     ctx.body = '<h1>404!</h1>';
+//   }
+// })
+
 //设置cookies
 app.keys = ['im a newer secret', 'i like turtle2'];
 
@@ -129,6 +191,6 @@ app.on('error', (err) => {
 });
 
 // 监听端口
-app.listen(3001, () => {
-  console.log('服务器已启动，http://localhost:3001');
+app.listen(80, () => {
+  console.log('服务器已启动，http://localhost:80');
 });

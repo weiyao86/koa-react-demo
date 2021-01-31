@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "devTest": "node dev-server.js",
     "dev": "cross-env NODE_ENV=development node dev-server.js",
     "prod": "cross-env NODE_ENV=production node prod-server.js",
     "start": "webpack-dev-server --config  ./config/webpack.config.base.js",
@@ -14,17 +15,21 @@
   "license": "ISC",
   "dependencies": {
     "core-js": "^3.8.3",
+    "dva": "^2.4.1",
     "ejs": "^3.1.5",
+    "history": "^4.7.2",
     "koa": "^2.13.0",
     "koa-better-router": "^2.1.1",
     "koa-body": "^4.2.0",
     "koa-compose": "^4.1.0",
     "koa-logger": "^3.2.1",
+    "koa-session": "^6.1.0",
     "koa-static": "^5.0.0",
     "postcss-preset-env": "^6.7.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "require-all": "^3.0.0"
+    "require-all": "^3.0.0",
+    "sha1": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
