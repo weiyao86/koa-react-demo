@@ -1,11 +1,9 @@
-import { Spin } from 'antd';
+// import { Spin } from 'antd';
 import { connect } from 'dva';
 
 const ModelsCache = {};
 
-@connect((state, b, c, d) => {
-  return { ...state };
-})
+@connect(state => state)
 export default function asyncComponent(cmp) {
   class AsyncCmp extends React.Component {
     constructor(props) {
