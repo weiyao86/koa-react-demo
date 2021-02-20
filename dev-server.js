@@ -91,7 +91,7 @@ koaWebpack({
         }
         setTimeout(() => {
           log.info(message);
-          log.info(`请访问 http://127.0.0.1:80`);
+          log.info(`请访问 http://127.0.0.1:3000`);
         }, 233);
       } else {
         log.info('Compiling...');
@@ -223,6 +223,6 @@ app.on('error', (err) => {
 });
 
 // 监听端口
-app.listen(80, () => {
-  console.log('服务器已启动，http://localhost:80');
+app.listen(3000, () => {
+  console.log('服务器已启动，http://localhost:3000');
 });

@@ -17,7 +17,7 @@ export default function asyncComponent(cmp) {
     componentDidMount() {
       const { globalModel } = this.props;
       const cmpMethod = cmp();
-      debugger;
+      
       // 直接返回class
       // if (cmpMethod.prototype instanceof React.Component || typeof cmpMethod === 'function') {
       //   return this.setState({
@@ -27,25 +27,32 @@ export default function asyncComponent(cmp) {
       // }
 
       // 返回异步组件及model
-      const { entry = {}, models = [] } = cmpMethod;
+      const { entry = null, models = [] } = cmpMethod;
 
       Promise.all([entry, ...models]).then((arr) => {
-        const [c, m] = arr;
-
+        let c={};
+        let m=[];
+        arr.forEach(item=>{
+          if(item.default && item.default.prototype instanceof React.Component || typeof cmpMethod === 'function'){
+            c=item;
+          }else{
+            m.push(item);
+          }
+        })
+        
         if (m) {
-          console.log(m)
-          window.AppInstance.model(m.default);
+          console.log(window.AppInstance)
+          
+          m.forEach(item=>{
+            window.AppInstance.model(item.default);
+          })
         }
 
-        // setTimeout(() => {
         this.setState({
           component: c.default || c,
-          model: m.default || m,
+          model: m,
         });
-        // }, 300)
-
-      })
-        .catch((a, b, c) => {
+      }).catch((a, b, c) => {
 
         });
     }

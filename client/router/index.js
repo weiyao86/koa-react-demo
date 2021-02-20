@@ -4,10 +4,10 @@ const routerConfig = [
   {
     path: '/',
     component: LazyMoudle(() => ({
-      entry: import(/* webpackChunkName: "pagesLayout" */ '@/views/layout'),
-      models: [import(/* webpackChunkName: "pagesLayout" */ '@/views/layout/model'), import(/* webpackChunkName: "pagesLayout" */ '@/views/layout/modelTest')]
+      entry: import(/* webpackChunkName: "pagesHome" */ '@/views/home'),
+      models: [import(/* webpackChunkName: "pagesHomeModel" */ '@/views/home/model'), import(/* webpackChunkName: "pagesHomeModel" */ '@/views/home/modelTest')]
     })),
-    breadcrumbName: 'layout',
+    breadcrumbName: 'home',
     exact: true,
   },
 ];

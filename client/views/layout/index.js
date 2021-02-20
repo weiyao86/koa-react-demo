@@ -1,4 +1,6 @@
+import {Switch,Route} from 'dva/router'
 import './style.less';
+
 class Class extends React.Component {
 
   flattenRouters = arr =>
@@ -20,7 +22,8 @@ class Class extends React.Component {
   }
   render() {
     const { app, routerConfig } = this.props;
-    curRouterConfig = this.flattenRouters(routerConfig);
+    
+    const curRouterConfig = this.flattenRouters(routerConfig);
     return (<div className="layout-main">
       <Switch>
         {curRouterConfig.map((route, i) => this.routeWithSubRoutes(route))}
