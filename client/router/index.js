@@ -9,6 +9,15 @@ const routerConfig = [
     })),
     breadcrumbName: 'home',
     exact: true,
+  }, 
+  {
+    path: '/main',
+    component: LazyMoudle(() => ({
+      entry: import(/* webpackChunkName: "pagesMain" */ '@/views/main'),
+      models: [import(/* webpackChunkName: "pagesMainModel" */ '@/views/main/model')]
+    })),
+    breadcrumbName: 'main',
+    exact: true,
   },
 ];
 

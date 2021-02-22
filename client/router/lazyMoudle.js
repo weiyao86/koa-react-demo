@@ -17,15 +17,7 @@ export default function asyncComponent(cmp) {
     componentDidMount() {
       const { globalModel } = this.props;
       const cmpMethod = cmp();
-
-      // 直接返回class
-      // if (cmpMethod.prototype instanceof React.Component || typeof cmpMethod === 'function') {
-      //   return this.setState({
-      //     component: cmpMethod,
-      //     model: null,
-      //   });
-      // }
-
+      
       // 返回异步组件及model
       const { entry = null, models = [] } = cmpMethod;
 
@@ -34,10 +26,11 @@ export default function asyncComponent(cmp) {
           let c = {};
           let m = [];
           arr.forEach((item) => {
-            if ((item.default && item.default.prototype instanceof React.Component) || typeof cmpMethod === 'function') {
-              c = item;
+            let itemDefault=item && item.default;
+            if (itemDefault && itemDefault.prototype instanceof React.Component) {
+              c = itemDefault;
             } else {
-              m.push(item);
+              m.push(itemDefault);
             }
           });
 
@@ -45,12 +38,12 @@ export default function asyncComponent(cmp) {
             console.log(window.AppInstance);
 
             m.forEach((item) => {
-              window.AppInstance.model(item.default);
+              window.AppInstance.model(item);
             });
           }
 
           this.setState({
-            component: c.default || c,
+            component: c,
             model: m,
           });
         })

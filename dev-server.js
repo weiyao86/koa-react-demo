@@ -17,25 +17,24 @@ const webpack = require('webpack');
 const app = new Koa();
 
 const CONFIG = {
-  key: 'koa.sess', /** (string) cookie key (default is koa.sess) */
+  key: 'koa.sess' /** (string) cookie key (default is koa.sess) */,
   /** (number || 'session') maxAge in ms (default is 1 days) */
   /** 'session' will result in a cookie that expires when session/browser is closed */
   /** Warning: If a session cookie is stolen, this cookie will never expire */
   maxAge: 86400000,
-  autoCommit: true, /** (boolean) automatically commit headers (default true) */
-  overwrite: true, /** (boolean) can overwrite or not (default true) */
-  httpOnly: true, /** (boolean) httpOnly or not (default true) */
-  signed: true, /** (boolean) signed or not (default true) */
-  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
-  renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
-  secure: true, /** (boolean) secure cookie*/
-  sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
+  autoCommit: true /** (boolean) automatically commit headers (default true) */,
+  overwrite: true /** (boolean) can overwrite or not (default true) */,
+  httpOnly: true /** (boolean) httpOnly or not (default true) */,
+  signed: true /** (boolean) signed or not (default true) */,
+  rolling: false /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
+  renew: false /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/,
+  secure: true /** (boolean) secure cookie*/,
+  sameSite: null /** (string) session cookie sameSite options (default null, don't set it) */,
 };
 //session
 app.use(session(CONFIG, app));
 //静态文件夹
 app.use(serve(path.join(__dirname, './public')));
-
 
 // 将 webpack.config.base.js 配置文件作为基础配置
 // koa-webpack-dev-middleware 是一个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server,保存在内存中，开发环境使用
@@ -43,6 +42,8 @@ app.use(serve(path.join(__dirname, './public')));
 // webpackCng.entry.main.unshift('react-hot-loader/patch');
 
 const compiler = webpack(webpackCng);
+
+app.context.webpackCompiler = compiler;
 
 // new webpack.ProgressPlugin().apply(compiler);
 
@@ -70,7 +71,7 @@ koaWebpack({
       const { log, state, stats } = options;
 
       if (state) {
-        const displayStats = (middlewareOptions.stats !== false);
+        const displayStats = middlewareOptions.stats !== false;
 
         if (displayStats) {
           if (stats.hasErrors()) {
@@ -114,9 +115,7 @@ koaWebpack({
     // HTTPS: true,
   },
 }).then((middleware, ...args) => {
-
   app.use(middleware);
-
 
   //post 请求参数解析，文件上传
   app.use(
@@ -150,7 +149,7 @@ koaWebpack({
   // app.use(allMiddle)
   // app.use(router.middleware());
   //设置模板目录，ejs引擎
-  console.log(path.join(__dirname, './app/views'))
+  console.log(path.join(__dirname, './app/views'));
   app.use(
     views(path.join(__dirname, './app/views'), {
       map: {
@@ -164,15 +163,13 @@ koaWebpack({
   // app.use((ctx, next) => router.middleware()(ctx, next));
 
   app.use((ctx, next) => {
-
+    
     // 如果路由中间件已经有数据了，无需再走静态文件中间件了
     if (ctx.body) {
       return true;
     }
     return next();
   });
-
-
 });
 
 // app.use(async (ctx) => {

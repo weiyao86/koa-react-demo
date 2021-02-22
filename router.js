@@ -1,6 +1,9 @@
 const requireAll = require('require-all');
 const router = require('koa-better-router')().loadMethods();
-
+const path = require('path');
+const controller = requireAll({
+  dirname: path.join(__dirname, './app/controller'),
+});
 
 const backUrl = '/';
 
@@ -34,6 +37,6 @@ router.get(
     }
     return next();
   }
-);
+,controller.base.index);//SPA  返回页面
 
 module.exports = router;

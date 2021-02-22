@@ -20,7 +20,7 @@ class Class extends React.Component {
       <>
     <p onClick={this.handleStar.bind(null, star)}>start</p>
    
-      <div className="star">⭐HOME</div>
+      <div className="star">⭐</div>
     </>
     )
   }
