@@ -30,6 +30,8 @@ models.forEach(model => {
   app.model(model);
 });
 
+window.AppInstance=app;
+
 // 4.Router
 app.router(props => (
   <BrowserRouter>
@@ -42,7 +44,7 @@ app.router(props => (
 
 const App = app.start();
 
-window.AppInstance=app;
+
 
 ReactDom.render(<App />, document.getElementById("app"));
 

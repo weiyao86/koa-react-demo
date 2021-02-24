@@ -1,7 +1,15 @@
 // import { Spin } from 'antd';
 import { connect } from 'dva';
 
-const ModelsCache = {};
+const appInstance = window.AppInstance;
+const modelsCache = {};
+//the model only load once
+const registerModel = (model) => {
+  if (model.namespace && !modelsCache[model.namespace]) {
+    window.AppInstance.model(model);
+    modelsCache[model.namespace] = 1;
+  }
+};
 
 export default function asyncComponent(cmp) {
   @connect((state) => state)
@@ -17,7 +25,7 @@ export default function asyncComponent(cmp) {
     componentDidMount() {
       const { globalModel } = this.props;
       const cmpMethod = cmp();
-      
+
       // 返回异步组件及model
       const { entry = null, models = [] } = cmpMethod;
 
@@ -26,7 +34,7 @@ export default function asyncComponent(cmp) {
           let c = {};
           let m = [];
           arr.forEach((item) => {
-            let itemDefault=item && item.default;
+            let itemDefault = item && item.default;
             if (itemDefault && itemDefault.prototype instanceof React.Component) {
               c = itemDefault;
             } else {
@@ -35,24 +43,22 @@ export default function asyncComponent(cmp) {
           });
 
           if (m) {
-            console.log(window.AppInstance);
-
             m.forEach((item) => {
-              window.AppInstance.model(item);
+              registerModel(item);
             });
           }
-
           this.setState({
             component: c,
             model: m,
           });
         })
-        .catch((a, b, c) => {});
+        .catch(err => {
+          console.log('catch',err);
+        });
     }
 
     render() {
       const C = this.state.component;
-
       return C ? <C {...this.props} /> : <div>Loading...</div>;
     }
   }

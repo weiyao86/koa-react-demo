@@ -1,4 +1,5 @@
 import {CSSTransition} from 'react-transition-group'
+
 import './style.less';
 
 class Class extends React.Component {
@@ -19,6 +20,7 @@ class Class extends React.Component {
     return (
       <>
     <p onClick={this.handleStar.bind(null, star)}>start</p>
+    main
    
       <div className="star">⭐</div>
     </>
