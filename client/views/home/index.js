@@ -1,4 +1,3 @@
-import {CSSTransition} from 'react-transition-group'
 import {Link,Route} from 'dva/router'
 import './style.less';
 class Class extends React.Component {
@@ -7,7 +6,6 @@ class Class extends React.Component {
   }
 
   handleStar=()=>{
-
 
     this.setState((state)=>{
       return {
@@ -20,13 +18,13 @@ class Class extends React.Component {
     const {star} = this.state;
     return (
       <>
-    <p onClick={this.handleStar.bind(null, star)}>start</p>
-    <Link to="/main">redirect Home</Link>
-    <div className="star">⭐HOME</div>
-    <Link to="/dashboard">redirect dashboard</Link>
-    <div className="test"> test</div>
-    <div className="wrap">wrap</div>
-    </>
+        <p onClick={this.handleStar.bind(null, star)}>start</p>
+        <Link to="/main">redirect Home</Link>
+        <div className="star">⭐HOME</div>
+        <Link to="/dashboard">redirect dashboard</Link>
+        <div className="test"> test</div>
+        <div className="wrap">wrap</div>
+      </>
     )
   }
 }

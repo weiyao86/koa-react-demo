@@ -12,6 +12,7 @@ import $ from 'jquery'; //测试外部externals
 import './resource/style/index.css';
 import './resource/style/index.scss';
 import './resource/style/index.less';
+import './resource/style/frame.less';
 
 const history = createHistory();
 const app = dva({
@@ -43,8 +44,6 @@ app.router(props => (
 // 5.start
 
 const App = app.start();
-
-
 
 ReactDom.render(<App />, document.getElementById("app"));
 

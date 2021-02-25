@@ -7,7 +7,8 @@ const routerConfig = [
       entry: import(/* webpackChunkName: "pagesHome" */ '@/views/home'),
       models: [import(/* webpackChunkName: "pagesHomeModel" */ '@/views/home/model'), import(/* webpackChunkName: "pagesHomeModel" */ '@/views/home/modelTest')],
     })),
-    breadcrumbName: 'home',
+    breadcrumbName: '首页',
+    title: '首页',
     exact: true,
   },
   {
@@ -17,6 +18,7 @@ const routerConfig = [
       models: [import(/* webpackChunkName: "pagesMainModel" */ '@/views/main/model')],
     })),
     breadcrumbName: 'main',
+    title: 'main',
     exact: true, //为true时，则要求路径与location.pathname必须完全匹配
     strict: true, //为true时，有结尾斜线的路径只能匹配有斜线的location.pathname
   },

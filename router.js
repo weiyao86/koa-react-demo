@@ -1,13 +1,19 @@
 const requireAll = require('require-all');
 const router = require('koa-better-router')().loadMethods();
 const path = require('path');
+
+const api = requireAll({
+  dirname: path.join(__dirname, './app/api'),
+});
+
 const controller = requireAll({
   dirname: path.join(__dirname, './app/controller'),
 });
 
 const backUrl = '/';
 
-const wrapHttp = {
+//供接口使用
+const apiWrapHttp = {
   get(url, api) {
     router.get(`${backUrl + url}`, api);
   },
@@ -16,16 +22,12 @@ const wrapHttp = {
   },
 };
 
-// wrapHttp.get('/*', controller.base.index);
+apiWrapHttp.get('/*', api.base.index);
+
 router.get('/redirect', async (ctx, next) => {
 
   console.log('***************redirect***************');
-  await ctx.render('index')
-}, async (ctx, next) => {
-
-  console.log('***************hahahahal***************');
-  ctx.body = "hahahahal................"
-  next();
+  await ctx.render('index');//views index.html
 });
 
 router.get(
