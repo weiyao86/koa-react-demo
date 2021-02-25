@@ -6,6 +6,7 @@ const koaBody = require('koa-body');
 const serve = require('koa-static');
 const compose = require('koa-compose');
 const views = require('koa-views');
+const favicon = require('koa-favicon');
 const koaWebpack = require('koa-webpack');
 const middlewareFile = require('./app/middleware');
 const path = require('path');
@@ -17,6 +18,10 @@ const app = new Koa();
 
 //静态文件夹,并指定首页
 app.use(serve(path.join(__dirname, './public'),{index:'index.html'}));
+
+//favicon
+app.use(favicon(__dirname + '/favicon.ico'));
+
 //设置模板目录，ejs引擎
 app.use(
   views(path.join(__dirname, './app/views'), {
