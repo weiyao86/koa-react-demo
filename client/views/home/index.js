@@ -24,6 +24,8 @@ class Class extends React.Component {
     <Link to="/main">redirect Home</Link>
     <div className="star">⭐HOME</div>
     <Link to="/dashboard">redirect dashboard</Link>
+    <div className="test"> test</div>
+    <div className="wrap">wrap</div>
     </>
     )
   }

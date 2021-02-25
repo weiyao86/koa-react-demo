@@ -9,8 +9,7 @@ async function loadHTMLTemplate (ctx){
       let content = '';
       if (process.env.NODE_ENV === 'development') {
         content = ctx.webpackCompiler.outputFileSystem.readFileSync(path.join(ctx.webpackCompiler.outputPath, 'index.html')).toString();
-      } else 
-      if (contentHtml) {
+      } else if (contentHtml) {
         content = contentHtml;
       } else {
         contentHtml = fs.readFileSync(path.join(process.cwd(), '/public', 'index.html'));
