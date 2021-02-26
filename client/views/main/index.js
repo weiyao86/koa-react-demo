@@ -32,7 +32,6 @@ class Class extends React.Component {
       lthis.props.history.push({search:`{name:'jack',age:20}`});
     },2000)
 
-    this.props.history.listen=
   }
 
   render() {
