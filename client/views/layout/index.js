@@ -130,7 +130,13 @@ class Class extends React.Component {
               // defaultSelectKeys={['/']}
               selectedKeys={[stKey]}
               onClick={(item, key, keyPath, domEvent) => {
-                this.props.history.push(item.key, {exact: true});
+                //传参四方式
+                //地址栏无显示 
+                // this.props.history.push({pathname:item.key,query:{name:'jack',age:19}});
+                // this.props.history.push({pathname:item.key,state:{value:'i am the state'}});
+                //保留地址
+                this.props.history.push({pathname:item.key,search:'tttttt'});
+                //report/:id    
               }}
             >
               {menu}
