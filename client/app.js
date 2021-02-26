@@ -8,7 +8,7 @@ import createHistory from 'history/createBrowserHistory';
 import models from '@/models/index';
 import routerConfig from '@/router';
 import Layout from './views/layout';
-import $ from 'jquery'; //测试外部externals 
+import $ from 'jquery'; //测试外部externals
 import './resource/style/index.css';
 import './resource/style/index.scss';
 import './resource/style/index.less';
@@ -17,27 +17,27 @@ import './resource/style/frame.less';
 const history = createHistory();
 const app = dva({
   initialState: 'globalState',
-  history
+  history,
 });
 
 // 2. Plugins
 // app.use({});
 
 // 3.use.model
-models.forEach(model => {
+models.forEach((model) => {
   if (model.namespace == 'glboal') {
-    model.state = { ...model.state, ...{ 'test': 'testName' } };
+    model.state = { ...model.state, ...{ test: 'testName' } };
   }
   app.model(model);
 });
 
-window.AppInstance=app;
+window.AppInstance = app;
 
 // 4.Router
-app.router(props => (
+
+app.router((props) => (
   <BrowserRouter>
-    <Layout app={props.app} routerConfig={routerConfig}>
-    </Layout>
+      <Layout app={props.app} routerConfig={routerConfig}></Layout>
   </BrowserRouter>
 ));
 
@@ -45,7 +45,7 @@ app.router(props => (
 
 const App = app.start();
 
-ReactDom.render(<App />, document.getElementById("app"));
+ReactDom.render(<App />, document.getElementById('app'));
 
 //配置热更新模块，无刷新[需配置devServer]
 // if (module.hot) {

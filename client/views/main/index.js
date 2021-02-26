@@ -1,52 +1,52 @@
-import {CSSTransition} from 'react-transition-group'
-
+import ReactDOM from 'react-dom';
+import { CSSTransition } from 'react-transition-group';
+import {GlobalContext} from '@/components/globalContext';
 import './style.less';
 
-
 class Class extends React.Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state  = {
-      star: false
-    }
-  
-    //监听地址变化 
+    this.state = {
+      star: false,
+    };
+
+    //监听地址变化
     // this.unlisten = this.props.history.listen((location, action) => {
     //   if (location.pathname !== this.state.location.pathname) {
     //     this.setState({defaultSelectKeys: [location.pathname], location});
     //   }
     // });
   }
-  
-  handleStar=()=>{
-    this.setState((state)=>{
+
+  handleStar = () => {
+    this.setState((state) => {
       return {
-        star:!state.star
-      }
+        star: !state.star,
+      };
     });
-  }
+  };
+  //Context 使用
+  static contextType  = GlobalContext;
+  componentDidMount() {
+    console.log(this.context, 'context');
 
-  componentDidMount(){
-    setTimeout(()=>{
-      lthis.props.history.push({search:`{name:'jack',age:20}`});
-    },2000)
-
-    this.props.history.listen=
+    ReactDOM.createPortal(<div>test portal</div>,document.body);
+    setTimeout(() => {
+      this.props.history.push({ search: `{name:'jack',age:20}` });
+    }, 2000);
   }
 
   render() {
-    const {star} = this.state;
-    console.log(this.props.location)
-   
+    const { star } = this.state;
+    console.log(this.props.location);
+
     return (
       <>
-    <p onClick={this.handleStar.bind(null, star)}>start</p>
-    main
-   
-      <div className="star">⭐</div>
-    </>
-    )
+        <p onClick={this.handleStar.bind(null, star)}>start</p>
+        main
+        <div className='star'>⭐</div>
+      </>
+    );
   }
 }
 export default Class;
