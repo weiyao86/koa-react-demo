@@ -3,6 +3,7 @@ import {matchRoutes} from 'react-router-config';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import {Layout, Menu, Breadcrumb, Icon} from 'antd';
 import {getBreadcrumbs} from '@/components/breadCrumbs';
+import {GlobalContext,GlobalData} from '@/components/globalContext';
 import './style.less';
 
 const {SubMenu} = Menu;
@@ -11,6 +12,7 @@ const ANIMATION_MAP = {
   PUSH: 'forward',
   POP: 'back',
 };
+
 @withRouter
 class Class extends React.Component {
   flattenRouters = (arr) =>
@@ -113,6 +115,8 @@ class Class extends React.Component {
     //   </div>
     // );
     return (
+      //使用Context
+      <GlobalContext.Provider value={GlobalData}>
       <Layout>
         <Header className="header">
           <div className="logo">Logo</div>
@@ -174,6 +178,7 @@ class Class extends React.Component {
           </Layout>
         </Layout>
       </Layout>
+      </GlobalContext.Provider>
     );
   }
 }
