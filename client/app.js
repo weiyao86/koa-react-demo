@@ -25,7 +25,7 @@ const app = dva({
 
 // 3.use.model
 models.forEach((model) => {
-  if (model.namespace == 'glboal') {
+  if (model.namespace == 'global') {
     model.state = { ...model.state, ...{ test: 'testName' } };
   }
   app.model(model);

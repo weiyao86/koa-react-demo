@@ -1,4 +1,5 @@
 import {Link,Route} from 'dva/router'
+import Graphin, { Behaviors } from '@antv/graphin';
 import './style.less';
 class Class extends React.Component {
   state  = {
@@ -18,12 +19,7 @@ class Class extends React.Component {
     const {star} = this.state;
     return (
       <>
-        <p onClick={this.handleStar.bind(null, star)}>start</p>
-        <Link to="/main">redirect Home</Link>
-        <div className="star">⭐HOME</div>
-        <Link to="/dashboard">redirect dashboard</Link>
-        <div className="test"> test</div>
-        <div className="wrap">wrap</div>
+        
       </>
     )
   }

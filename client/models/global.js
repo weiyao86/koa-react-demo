@@ -1,6 +1,6 @@
 
 /**
- * glboal model
+ * global model
  */
 const model = {
   namespace: 'global',
