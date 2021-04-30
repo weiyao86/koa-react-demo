@@ -267,6 +267,6 @@ module.exports = {
     }),
 
     //自定义插件，内部实现各类钩子函数
-    new ConsoleLogOnBuildWebpackPlugin(),
+    // new ConsoleLogOnBuildWebpackPlugin(),
   ],
 };
