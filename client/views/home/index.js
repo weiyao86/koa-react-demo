@@ -47,7 +47,7 @@ class Class extends React.Component {
     current: 0,
   };
 
-  timeTotal = 30 * 1000;
+  timeTotal = 10 * 1000;
   calcCount = 0;
 
   setRandom(size = 10, sum = 100) {
@@ -101,18 +101,20 @@ class Class extends React.Component {
     let self = this;
     this.calcCount = 0;
     let random = this.setRandom();
+
     random.forEach((curPercent, idx) => {
       let curTime = (curPercent / 100) * this.timeTotal;
       queue.add(function (next) {
         console.log(`当前步骤=>${idx+1}`);
         self.doneByTime({next, totalTime:curTime, percent:curPercent,cb:(msg)=>{
-          console.log(msg);
+          console.log(msg+`---步骤${idx+1}`);
           if(queue.getQueue().length==0){
             console.timeEnd('time');
           }
         }});
       });
     });
+    
     console.time('time');
     queue.trigger();
   };
