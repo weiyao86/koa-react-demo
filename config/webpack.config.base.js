@@ -133,6 +133,10 @@ module.exports = {
 
   externals: {
     jquery: 'jQuery',
+    // only define the dependencies you are NOT using as externals!
+    canvg: 'canvg',
+    // html2canvas: 'html2canvas',
+    dompurify: 'dompurify',
   },
 
   //配置.css,.scss,.less

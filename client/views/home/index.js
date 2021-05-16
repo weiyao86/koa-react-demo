@@ -2,6 +2,7 @@ import { Link, Route } from 'dva/router';
 import TweenOne from 'rc-tween-one';
 import { Button, Progress } from 'antd';
 import React from 'react';
+import HtmlToPdf from '@/components/html-to-pdf';
 import './style.less';
 
 let TweenOneGroup = TweenOne.TweenOneGroup;
@@ -108,7 +109,9 @@ class Class extends React.Component {
     random.forEach((curPercent, idx) => {
       let curTime = (curPercent / 100) * this.timeTotal;
       queue.add(function (next) {
+        
         console.log(`当前步骤=>${idx + 1}`);
+
         self.doneByTime({
           next,
           totalTime: curTime,
@@ -127,6 +130,10 @@ class Class extends React.Component {
     console.time('time');
     queue.trigger();
   };
+
+  componentDidCatch(){
+    
+  }
 
   render() {
     const { current } = this.state;
@@ -148,6 +155,7 @@ class Class extends React.Component {
           }}
           percent={current}
         />
+        <HtmlToPdf></HtmlToPdf>
       </>
     );
   }
