@@ -3,6 +3,17 @@ import { CSSTransition } from 'react-transition-group';
 import {GlobalContext} from '@/components/globalContext';
 import './style.less';
 
+//自定义指令
+const withTest = props => WrapCmp => {
+  console.log('p', props)
+  return class extends React.Component {
+    render() {
+      return <div>test {props}<WrapCmp></WrapCmp></div>
+    }
+  }
+}
+
+@withTest
 class Class extends React.Component {
   constructor(props) {
     super(props);

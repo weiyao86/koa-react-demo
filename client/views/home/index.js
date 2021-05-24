@@ -2,6 +2,7 @@ import { Link, Route } from 'dva/router';
 import TweenOne from 'rc-tween-one';
 import { Button, Progress } from 'antd';
 import React from 'react';
+import HtmlToPdf from '@/components/html-to-pdf';
 import './style.less';
 
 let TweenOneGroup = TweenOne.TweenOneGroup;
@@ -47,8 +48,9 @@ class Class extends React.Component {
     current: 0,
   };
 
-  timeTotal = 10 * 1000;
+  timeTotal = 5 * 1000;
   calcCount = 0;
+  timer = null;
 
   setRandom(size = 10, sum = 100) {
     let csize = size - 1;
@@ -63,21 +65,20 @@ class Class extends React.Component {
     return arr;
   }
 
-  doneByTime({next, totalTime, percent,cb}) {
+  doneByTime({ next, totalTime, percent, cb }) {
     let startLoop = +new Date();
-    let timer = null;
     let count = 0;
     let delay = 16.733;
-   
-    let percentByms=percent*delay/totalTime;
+    let prev = 0;
+
     let begin = () => {
       let now = +new Date();
       let sub = now - startLoop;
       sub >= totalTime && (sub = totalTime);
       let cur = sub / totalTime;
-     
-      this.calcCount += percentByms;
 
+      let percentByms = percent * cur;
+      this.calcCount += percentByms-prev;
       this.setState({ current: this.calcCount });
 
       if (cur < 1) {
@@ -85,13 +86,14 @@ class Class extends React.Component {
         if (nextTime < 0) {
           nextTime = 0;
         }
-        timer = setTimeout(begin, Math.min(delay, nextTime));
+        this.timer = setTimeout(begin, Math.min(delay, nextTime));
       } else {
-        clearTimeout(timer);
-        typeof cb=="function" && cb(`进度:${percent}--总进度:${this.calcCount}---次数:${count}---块时间:${totalTime}`);
+        clearTimeout(this.timer);
+        typeof cb == 'function' && cb(`进度条值:${percent}--总进度:${this.calcCount}---次数:${count}---块时间:${totalTime}`);
         next();
-        
       }
+      
+      prev = percentByms;
       count++;
     };
     begin();
@@ -102,22 +104,36 @@ class Class extends React.Component {
     this.calcCount = 0;
     let random = this.setRandom();
 
+    clearTimeout(this.timer);
+    queue.clear();
     random.forEach((curPercent, idx) => {
       let curTime = (curPercent / 100) * this.timeTotal;
       queue.add(function (next) {
-        console.log(`当前步骤=>${idx+1}`);
-        self.doneByTime({next, totalTime:curTime, percent:curPercent,cb:(msg)=>{
-          console.log(msg+`---步骤${idx+1}`);
-          if(queue.getQueue().length==0){
-            console.timeEnd('time');
-          }
-        }});
+        
+        console.log(`当前步骤=>${idx + 1}`);
+
+        self.doneByTime({
+          next,
+          totalTime: curTime,
+          percent: curPercent,
+          cb: (msg) => {
+            console.log(msg + `---步骤${idx + 1}`);
+            if (queue.getQueue().length == 0) {
+              console.timeEnd('time');
+              self.setState({ current: 100 });
+            }
+          },
+        });
       });
     });
-    
+
     console.time('time');
     queue.trigger();
   };
+
+  componentDidCatch(){
+    
+  }
 
   render() {
     const { current } = this.state;
@@ -139,6 +155,7 @@ class Class extends React.Component {
           }}
           percent={current}
         />
+        <HtmlToPdf></HtmlToPdf>
       </>
     );
   }
