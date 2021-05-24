@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{666:function(e,s,n){"use strict";n.r(s);s.default={namespace:"main",state:{},reducers:{},effects:{}}}}]);
+//# sourceMappingURL=pagesMainModel.js.map

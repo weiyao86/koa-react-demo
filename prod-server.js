@@ -13,6 +13,7 @@ const path = require('path');
 const webpackCng = require('./config/webpack.config.prod');
 const webpack = require('webpack');
 
+
 // 创建koa的实例app
 const app = new Koa();
 

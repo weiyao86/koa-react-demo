@@ -123,7 +123,7 @@ class Class extends React.Component {
     const { current } = this.state;
     return (
       <>
-        <h2>Home</h2>
+        <h2 className="wrap">Home</h2>
         <TweenOne
           animation={{ x: 50 }}
           onChange={(e) => {

@@ -11,5 +11,5 @@ module.exports = merge(common, {
     clear: true,
     width: 60,
     stream: process.stdout ? process.stdout : undefined,
-  })]
+  }),new CleanWebpackPlugin()]
 });

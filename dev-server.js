@@ -13,6 +13,7 @@ const middlewareFile = require('./app/middleware');
 const path = require('path');
 const webpackCng = require('./config/webpack.config.dev.js');
 const webpack = require('webpack');
+const os = require('os');
 
 // 创建koa的实例app
 const app = new Koa();
@@ -66,6 +67,25 @@ app.context.webpackCompiler = compiler;
 //   // console.info(percentage, message, ...args);
 // }).apply(compiler)
 
+let localIp='';
+let port=3000;
+function getIPAdress() {
+  if(localIp) return localIp;
+  let localIPAddress = "";
+  let interfaces = os.networkInterfaces();
+  for (let devName in interfaces) {
+      let iface = interfaces[devName];
+      for (let i = 0; i < iface.length; i++) {
+          let alias = iface[i];
+          if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+              localIPAddress = alias.address;
+          }
+      }
+  }
+  localIp = localIPAddress;
+  return localIPAddress;
+}
+
 koaWebpack({
   compiler, //or configPath path.join(__dirname, 'client', 'webpack.config.js')
   devMiddleware: {
@@ -95,7 +115,7 @@ koaWebpack({
         }
         setTimeout(() => {
           log.info(message);
-          log.info(`请访问 http://127.0.0.1:3000`);
+          log.info(`请访问 http://127.0.0.1:${port} 或 http://${getIPAdress()}:${port}`);
         }, 233);
       } else {
         log.info('Compiling...');
@@ -223,6 +243,6 @@ app.on('error', (err) => {
 });
 
 // 监听端口
-app.listen(3000, () => {
-  console.log('服务器已启动，http://localhost:3000');
+app.listen(port, () => {
+  console.log(`服务器已启动，http://localhost:${port}`);
 });

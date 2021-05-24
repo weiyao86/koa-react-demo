@@ -5,38 +5,37 @@ const chalk = require('chalk'); /* console 颜色 */
 const slog = require('single-line-log'); /* 单行打印 console */
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const webpack = require('webpack');
+const CopyPlugin = require("copy-webpack-plugin");//
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
 const ClientDir = path.resolve(__dirname, '../client');
 
+
+const HappyPack = require('happypack');
+
+const cpuSize = (os.cpus() || []).length || 4;
+console.log('当前核心数：', cpuSize);
+// 多线程运行
+const happyThreadPool = HappyPack.ThreadPool({size: cpuSize});
+
+const happyPackLoaders = IS_PROD === 'production' ?
+  [
+    'cache-loader',
+    'babel-loader?cacheDirectory',
+  ] :
+  [
+    'cache-loader',
+    'babel-loader?cacheDirectory',
+  ];
+
+
 console.log('****************process.env.NODE_ENV**********');
+
 console.log(process.env.NODE_ENV);
 console.log(path.resolve(__dirname, '../client'));
 console.log(process.cwd());
 console.log('****************process.env.END**********');
-
-function copyFolder(from, to) {
-  // 复制文件夹到指定目录
-  let files = [];
-  if (fs.existsSync(to)) {
-    // 文件是否存在 如果不存在则创建
-    files = fs.readdirSync(from);
-    files.forEach((file) => {
-      const targetPath = path.join(from, file);
-      const toPath = path.join(to, file);
-      if (fs.statSync(targetPath).isDirectory()) {
-        // 复制文件夹
-        copyFolder(targetPath, toPath);
-      } else {
-        // 拷贝文件
-        fs.copyFileSync(targetPath, toPath);
-      }
-    });
-  } else {
-    fs.mkdirSync(to);
-    copyFolder(from, to);
-  }
-}
 
 //自定义插件
 const pluginName = 'ConsoleLogOnBuildWebpackPlugin';
@@ -98,12 +97,12 @@ class ConsoleLogOnBuildWebpackPlugin {
   }
 }
 
-// 复制 静态文件到 public
+    
+// 复制  plugin-->CopyPlugin
 const resourceStaticPath = path.join(__dirname, '../client/resource');
-const copyPath = path.join(__dirname, '../public');
-console.log(resourceStaticPath, copyPath);
-// copyFolder(resourceStaticPath, copyPath);
+const copyPath = path.join(__dirname, '../public/static');
 
+// console.log(resourceStaticPath,copyPath)
 // common function to get style loaders
 const getStyleLoaders = (cssOptions, preProcessor) => {
   const loaders = [!IS_PROD && 'style-loader', IS_PROD && MiniCssExtractPlugin.loader, cssOptions, 'postcss-loader'].filter(Boolean);
@@ -140,7 +139,8 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        use: 'babel-loader',
+        loader: 'happypack/loader?id=babel',
+        // loader:'babel-loader',
         exclude: /node_modules/,
       },
       {
@@ -254,6 +254,24 @@ module.exports = {
         collapseWhitespace: IS_PROD, // 去除html的换行
         minifyJS: IS_PROD, // 压缩html中的js
       },
+    }),
+
+
+    new CopyPlugin(
+      [{
+        from: resourceStaticPath,
+        to: copyPath,
+        toType: 'dir',
+        force: true,
+    }]),
+
+    new HappyPack({
+      // 多线程运行 默认是电脑核数-1
+      id: 'babel', // 对于loaders id
+      loaders: happyPackLoaders,
+      threadPool: happyThreadPool,
+      // 是否允许 happypack 在运行 webpack --profile 时输出日志，默认是 false
+      verboseWhenProfiling: true, // 显示信息
     }),
 
     new WebpackBar(),
