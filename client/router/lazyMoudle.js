@@ -12,7 +12,7 @@ const registerModel = (model) => {
 };
 
 export default function asyncComponent(cmp) {
-  @connect((state) => state)
+  
   class AsyncCmp extends React.Component {
     constructor(props) {
       super(props);
@@ -26,34 +26,27 @@ export default function asyncComponent(cmp) {
       const { globalModel } = this.props;
       const cmpMethod = cmp();
 
+
       // 返回异步组件及model
       const { entry = null, models = [] } = cmpMethod;
 
       Promise.all([entry, ...models])
         .then((arr) => {
-          let c = {};
-          let m = [];
-          arr.forEach((item) => {
+          let c = arr.shift();
+
+          arr = arr.map((item) => {
             let itemDefault = item && item.default;
-            if (itemDefault && itemDefault.prototype instanceof React.Component) {
-              c = itemDefault;
-            } else {
-              m.push(itemDefault);
-            }
+            registerModel(itemDefault);
+            return itemDefault;
           });
 
-          if (m) {
-            m.forEach((item) => {
-              registerModel(item);
-            });
-          }
           this.setState({
-            component: c,
-            model: m,
+            component: c.default ? c.default : c,
+            model: arr,
           });
         })
-        .catch(err => {
-          console.log('catch',err);
+        .catch((err) => {
+          console.log('catch', err);
         });
     }
 

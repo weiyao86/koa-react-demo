@@ -1,19 +1,24 @@
 import ReactDOM from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
-import {GlobalContext} from '@/components/globalContext';
+// import {GlobalContext} from '@/components/globalContext';
+import { connect } from 'dva';
 import './style.less';
 
 //自定义指令
-const withTest = props => WrapCmp => {
-  console.log('p', props)
+const withTest = props=>WrapCmp => {
+  console.log('p', this)
+  debugger;
+  // return <WrapCmp {...props}></WrapCmp>;
   return class extends React.Component {
     render() {
-      return <div>test {props}<WrapCmp></WrapCmp></div>
+     // {...this.props}
+      return <div>test<WrapCmp {...props}></WrapCmp></div>
     }
   }
 }
 
-@withTest
+// @withTest(state=>state)
+@connect((state) => state)
 class Class extends React.Component {
   constructor(props) {
     super(props);
@@ -37,19 +42,20 @@ class Class extends React.Component {
     });
   };
   //Context 使用
-  static contextType  = GlobalContext;
+  // static contextType  = GlobalContext;
   componentDidMount() {
-    console.log(this.context, 'context');
+    // console.log(this.context, 'context');
 
-    ReactDOM.createPortal(<div>test portal</div>,document.body);
+    
     setTimeout(() => {
+      ReactDOM.createPortal(<div>test portal</div>,document.body);
       this.props.history.push({ search: `{name:'jack',age:20}` });
+      this.setState({})
     }, 2000);
   }
 
   render() {
     const { star } = this.state;
-    console.log(this.props.location);
 
     return (
       <>

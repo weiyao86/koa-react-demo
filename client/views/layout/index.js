@@ -116,7 +116,7 @@ class Class extends React.Component {
     // );
     return (
       //使用Context
-      <GlobalContext.Provider value={GlobalData}>
+      // <GlobalContext.Provider value={GlobalData}> {/* </GlobalContext.Provider> */}
       <Layout>
         <Header className="header">
           <div className="logo">Logo</div>
@@ -178,7 +178,7 @@ class Class extends React.Component {
           </Layout>
         </Layout>
       </Layout>
-      </GlobalContext.Provider>
+     
     );
   }
 }

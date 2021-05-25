@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const webpack = require('webpack');
-const CopyPlugin = require("copy-webpack-plugin");//
+
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
 const ClientDir = path.resolve(__dirname, '../client');
 
@@ -19,7 +19,7 @@ console.log('当前核心数：', cpuSize);
 // 多线程运行
 const happyThreadPool = HappyPack.ThreadPool({size: cpuSize});
 
-const happyPackLoaders = IS_PROD === 'production' ?
+const happyPackLoaders = IS_PROD ?
   [
     'cache-loader',
     'babel-loader?cacheDirectory',
@@ -33,6 +33,7 @@ const happyPackLoaders = IS_PROD === 'production' ?
 console.log('****************process.env.NODE_ENV**********');
 
 console.log(process.env.NODE_ENV);
+console.log(path.resolve(__dirname));
 console.log(path.resolve(__dirname, '../client'));
 console.log(process.cwd());
 console.log('****************process.env.END**********');
@@ -97,10 +98,6 @@ class ConsoleLogOnBuildWebpackPlugin {
   }
 }
 
-    
-// 复制  plugin-->CopyPlugin
-const resourceStaticPath = path.join(__dirname, '../client/resource');
-const copyPath = path.join(__dirname, '../public/static');
 
 // console.log(resourceStaticPath,copyPath)
 // common function to get style loaders
@@ -260,15 +257,6 @@ module.exports = {
       },
     }),
 
-
-    new CopyPlugin(
-      [{
-        from: resourceStaticPath,
-        to: copyPath,
-        toType: 'dir',
-        force: true,
-    }]),
-
     new HappyPack({
       // 多线程运行 默认是电脑核数-1
       id: 'babel', // 对于loaders id
@@ -279,14 +267,6 @@ module.exports = {
     }),
 
     new WebpackBar(),
-
-    //最小化css
-    new MiniCssExtractPlugin({
-      // filename: "[name].[contenthash].css",
-      // chunkFilename: "[name].[contenthash].css"
-      filename: IS_PROD ? '[name].[contenthash].css' : '[name].[hash:10].css',
-      chunkFilename: `chunk/css/[name].css`,
-    }),
 
     //自定义插件，内部实现各类钩子函数
     // new ConsoleLogOnBuildWebpackPlugin(),

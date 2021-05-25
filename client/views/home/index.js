@@ -131,7 +131,7 @@ class Class extends React.Component {
     queue.trigger();
   };
 
-  componentDidCatch(){
+  componentDidMount(){
     
   }
 
