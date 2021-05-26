@@ -1,6 +1,7 @@
 import { Link, Route } from 'dva/router';
 import TweenOne from 'rc-tween-one';
-import { Button, Progress } from 'antd';
+import QueueAnim from 'rc-queue-anim';
+import { Button,Modal, Progress } from 'antd';
 import React from 'react';
 import HtmlToPdf from '@/components/html-to-pdf';
 import './style.less';
@@ -46,6 +47,7 @@ class Class extends React.Component {
   state = {
     star: false,
     current: 0,
+    visible:false
   };
 
   timeTotal = 5 * 1000;
@@ -131,8 +133,30 @@ class Class extends React.Component {
     queue.trigger();
   };
 
+  onShowModal=()=>{
+this.setState({visible:!this.state.visible})
+  }
+
   componentDidMount(){
     
+  }
+
+  showModal = () => {
+    // this.setIsModalVisible(true);
+    
+    Modal.confirm();
+  };
+
+   handleOk = () => {
+    this.setIsModalVisible(false);
+  };
+
+   handleCancel = () => {
+    this.setIsModalVisible(false);
+  };
+
+  setIsModalVisible(type){
+    this.setState({visible:type});
   }
 
   render() {
@@ -140,14 +164,18 @@ class Class extends React.Component {
     return (
       <>
         <h2 className="wrap">Home</h2>
-        <TweenOne
-          animation={{ x: 50 }}
-          onChange={(e) => {
-            // console.log(e);
-          }}
+        <QueueAnim
+          // className="wrap-modal"
+          animConfig={[
+            { left:['0%','100%'],opacity:[1,0] },
+          ]}
         >
-          <Button onClick={() => this.onStart()}>Demo</Button>
-        </TweenOne>
+        {this.state.visible ? [<div key="a" className="wrap-modal" onClick={this.handleCancel}>进出场动画</div>] :null}
+        
+        </QueueAnim>
+
+          <Button onClick={() => this.onShowModal()}>进出场动画</Button>
+          <Button onClick={() => this.onStart()}>Progress</Button>
         <Progress
           strokeColor={{
             '0%': '#108ee9',
@@ -156,6 +184,13 @@ class Class extends React.Component {
           percent={current}
         />
         <HtmlToPdf></HtmlToPdf>
+        <Button onClick={()=>this.setState(this.showModal)}>Modal</Button>
+        
+        {/* <Modal title="Basic Modal" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal> */}
       </>
     );
   }
