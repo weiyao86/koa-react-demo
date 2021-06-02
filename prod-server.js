@@ -4,6 +4,7 @@ let router = require('./router');
 const logger = require('koa-logger');
 const koaBody = require('koa-body');
 const serve = require('koa-static');
+// const serve = require('koa-static-server')  //不支持多个??
 const compose = require('koa-compose');
 const views = require('koa-views');
 const favicon = require('koa-favicon');
@@ -19,6 +20,10 @@ const app = new Koa();
 
 //静态文件夹,并指定首页
 app.use(serve(path.join(__dirname, './public'),{index:'index.html'}));
+app.use(serve(path.join(__dirname, './public1')));
+app.use(serve(path.join(__dirname, './public3')));
+app.use(serve('.'));
+
 
 //favicon
 app.use(favicon(__dirname + '/favicon.ico'));

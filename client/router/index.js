@@ -4,8 +4,8 @@ const routerConfig = [
   {
     path: '/',
     component: LazyMoudle(() => ({
-      entry: import(/* webpackChunkName: "pagesHome" */ '@/views/home'),
-      models: [import(/* webpackChunkName: "pagesHomeModel" */ '@/views/home/model'), import(/* webpackChunkName: "pagesHomeModel" */ '@/views/home/modelTest')],
+      entry: import(/* webpackChunkName: "pagesHome" */ '@Client/views/home'),
+      models: [import(/* webpackChunkName: "pagesHomeModel" */ '@Client/views/home/model'), import(/* webpackChunkName: "pagesHomeModel" */ '@Client/views/home/modelTest')],
     })),
     breadcrumbName: '首页',
     title: '首页',
@@ -14,8 +14,8 @@ const routerConfig = [
   {
     path: '/main',
     component: LazyMoudle(() => ({
-      entry: import(/* webpackChunkName: "pagesMain" */ '@/views/main'),
-      models: [import(/* webpackChunkName: "pagesMainModel" */ '@/views/main/model')],
+      entry: import(/* webpackChunkName: "pagesMain" */ '@Client/views/main'),
+      models: [import(/* webpackChunkName: "pagesMainModel" */ '@Client/views/main/model')],
     })),
     breadcrumbName: 'main',
     title: 'main',

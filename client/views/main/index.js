@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
-// import {GlobalContext} from '@/components/globalContext';
+// import {GlobalContext} from '@Client/components/globalContext';
 import { connect } from 'dva';
 import './style.less';
 

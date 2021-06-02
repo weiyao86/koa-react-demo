@@ -2,8 +2,8 @@ import { Switch, Route, withRouter, Link } from 'dva/router';
 import {matchRoutes} from 'react-router-config';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import {Layout, Menu, Breadcrumb, Icon} from 'antd';
-import {getBreadcrumbs} from '@/components/breadCrumbs';
-import {GlobalContext,GlobalData} from '@/components/globalContext';
+import {getBreadcrumbs} from '@Client/components/breadCrumbs';
+import {GlobalContext,GlobalData} from '@Client/components/globalContext';
 import './style.less';
 
 const {SubMenu} = Menu;

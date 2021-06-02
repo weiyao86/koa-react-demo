@@ -205,7 +205,7 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx'],
     alias: {
-      '@': ClientDir,
+      '@Client': ClientDir,
     },
   },
   //创建web服务，缓存在内存中，改变文件自动更新

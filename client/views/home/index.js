@@ -3,7 +3,8 @@ import TweenOne from 'rc-tween-one';
 import QueueAnim from 'rc-queue-anim';
 import { Button,Modal, Progress } from 'antd';
 import React from 'react';
-import HtmlToPdf from '@/components/html-to-pdf';
+import HtmlToPdf from '@Client/components/html-to-pdf';
+// import { Picker, List, WhiteSpace } from 'antd-mobile';
 import './style.less';
 
 let TweenOneGroup = TweenOne.TweenOneGroup;
@@ -185,7 +186,19 @@ this.setState({visible:!this.state.visible})
         />
         <HtmlToPdf></HtmlToPdf>
         <Button onClick={()=>this.setState(this.showModal)}>Modal</Button>
-        
+        {/* <Picker
+          data={[{value: '1', label: '5'}, {value: '2', label: '51'}, {value: '3', label: '52'}]}
+          key={'ttt'}
+          cols={1}
+          onOk={
+          (e) => {
+
+          }
+        }
+        >
+          <List.Item arrow="horizontal">Single</List.Item>
+        </Picker>
+         */}
         {/* <Modal title="Basic Modal" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
         <p>Some contents...</p>
         <p>Some contents...</p>

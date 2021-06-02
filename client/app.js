@@ -5,8 +5,8 @@ import ReactDom from 'react-dom';
 import dva from 'dva';
 import { StaticRouter, BrowserRouter } from 'dva/router';
 import createHistory from 'history/createBrowserHistory';
-import models from '@/models/index';
-import routerConfig from '@/router';
+import models from '@Client/models/index';
+import routerConfig from '@Client/router';
 import Layout from './views/layout';
 import $ from 'jquery'; //测试外部externals
 import './resource/style/index.css';
