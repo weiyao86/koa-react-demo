@@ -2,6 +2,9 @@ const requireAll = require('require-all');
 const router = require('koa-better-router')().loadMethods();
 const path = require('path');
 
+const filter = requireAll({
+  dirname: path.join(__dirname, './app/filter'),
+});
 const api = requireAll({
   dirname: path.join(__dirname, './app/api'),
 });
@@ -29,16 +32,19 @@ router.get('/redirect', async (ctx, next) => {
   console.log('***************redirect***************');
   await ctx.render('index');//views index.html
 });
+router.get('/login', async (ctx, next) => {
 
-router.get(
-  '/*',
-  (ctx, next) => {
+  await ctx.render('login');//views index.html
+});
 
-    if (ctx.url.indexOf('/favicon.ico') > -1) {
+router.get('/*', (ctx, next) => {
+
+  const ignores=['public','/favicon.ico'];
+    if (ignores.some(p=>ctx.url.indexOf(p) != -1)) {
       return true;
     }
     return next();
   }
-,controller.base.index);//SPA  返回页面
+,filter.verify,controller.base.index);//SPA  返回页面
 
 module.exports = router;

@@ -4,7 +4,8 @@ let router = require('./router');
 const logger = require('koa-logger');
 const koaBody = require('koa-body');
 const session = require('koa-session');
-const serve = require('koa-static');
+// const serve = require('koa-static');
+const serve = require('koa-static-server');
 const compose = require('koa-compose');
 const views = require('koa-views');
 const favicon = require('koa-favicon');
@@ -35,8 +36,7 @@ const CONFIG = {
 };
 //session
 app.use(session(CONFIG, app));
-//静态文件夹
-app.use(serve(path.join(__dirname, './public')));
+
 //favicon
 app.use(favicon(__dirname + '/favicon.ico'));
 
@@ -67,20 +67,20 @@ app.context.webpackCompiler = compiler;
 //   // console.info(percentage, message, ...args);
 // }).apply(compiler)
 
-let localIp='';
-let port=3000;
+let localIp = '';
+let port = 3000;
 function getIPAdress() {
-  if(localIp) return localIp;
-  let localIPAddress = "";
+  if (localIp) return localIp;
+  let localIPAddress = '';
   let interfaces = os.networkInterfaces();
   for (let devName in interfaces) {
-      let iface = interfaces[devName];
-      for (let i = 0; i < iface.length; i++) {
-          let alias = iface[i];
-          if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-              localIPAddress = alias.address;
-          }
+    let iface = interfaces[devName];
+    for (let i = 0; i < iface.length; i++) {
+      let alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        localIPAddress = alias.address;
       }
+    }
   }
   localIp = localIPAddress;
   return localIPAddress;
@@ -128,8 +128,8 @@ koaWebpack({
   },
   //热更新
   hotClient: {
-    allEntries: true,
-    autoConfigure: true,
+    allEntries: false,
+    autoConfigure: false,
     logTime: true,
     logLevel: 'error',
     // host: '127.0.0.1',
@@ -140,39 +140,49 @@ koaWebpack({
 }).then((middleware, ...args) => {
   app.use(middleware);
 
+  app.use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (error) {
+      debugger;
+      ctx.body = error;
+      // ctx.app.emit('error');
+    }
+  });
+
   //post 请求参数解析，文件上传
-  app.use(
-    koaBody({
-      jsonLimit: '11mb', // JSON主体字节 1mb //application/json
-      formLimit: '56kb', // 表单主体字节 56kb //application/x-www-urlencoded
-      textLimit: '56kb', // 文本主体字节 56kb
-      onError: (err, ctx) => {
-        //eslint-disable-line
-        console.log(err);
-        throw err;
-      },
-      multipart: true, //
-      formidable: {
-        // multipart/form-data
-        maxFields: 1000, // query 字符数 (0表示无限制)
-        maxFieldsSize: 2 * 1024 * 1024, // 默认单位内存量 2MB
-        maxFileSize: 20 * 1024 * 1024, // 限制上传文件的大小 20MB
-        keepExtensions: true,
-      },
-    })
-  );
+  // app.use(
+  //   koaBody({
+  //     jsonLimit: '11mb', // JSON主体字节 1mb //application/json
+  //     formLimit: '56kb', // 表单主体字节 56kb //application/x-www-urlencoded
+  //     textLimit: '56kb', // 文本主体字节 56kb
+  //     onError: (err, ctx) => {
+  //       //eslint-disable-line
+  //       console.log(err);
+  //       throw err;
+  //     },
+  //     multipart: true, //
+  //     formidable: {
+  //       // multipart/form-data
+  //       maxFields: 1000, // query 字符数 (0表示无限制)
+  //       maxFieldsSize: 2 * 1024 * 1024, // 默认单位内存量 2MB
+  //       maxFileSize: 20 * 1024 * 1024, // 限制上传文件的大小 20MB
+  //       keepExtensions: true,
+  //     },
+  //   })
+  // );
 
   //统一设置中间件
   const { ignoreAssets, setTime, getTime, respond } = middlewareFile;
 
   //控制台输出日志--忽略相关文件
-  const ignore = ignoreAssets(logger());
-  const allMiddle = compose([setTime, getTime, respond, ignore]);
+  // const ignore = ignoreAssets(logger());
+  // const allMiddle = compose([setTime, getTime, respond, ignore]);
 
   // app.use(allMiddle)
   // app.use(router.middleware());
   //设置模板目录，ejs引擎
-  console.log(path.join(__dirname, './app/views'));
+
   app.use(
     views(path.join(__dirname, './app/views'), {
       map: {
@@ -186,61 +196,34 @@ koaWebpack({
   // app.use((ctx, next) => router.middleware()(ctx, next));
 
   app.use((ctx, next) => {
-    
-    // 如果路由中间件已经有数据了，无需再走静态文件中间件了
+    //
     if (ctx.body) {
       return true;
     }
     return next();
   });
+
+  //静态文件夹
+  //静态文件夹,并指定首页
+  // app.use(serve(path.join(__dirname, './public'),{index:'index.html'}));
+
+  app.use(
+    serve({
+      rootDir: path.join(__dirname, '/public'),
+      rootPath: '/public',
+    })
+  );
+  // app.use(serve(path.join(__dirname, './public1')));
+  // app.use(serve(path.join(__dirname, './public3')));
+  // app.use(serve('.'));
 });
-
-// app.use(async (ctx) => {
-//   // let url = ctx.url;
-//   // console.log('i am come in')
-//   // //从request中获取GET请求
-//   // let request = ctx.request;
-//   // let req_query = request.query;
-//   // let req_querystring = request.querystring;
-
-//   // //从上下文中直接获取
-//   // let ctx_query = ctx.query;
-//   // let ctx_querystring = ctx.querystring;
-
-//   // ctx.body = {
-//   //   ctx
-//   // }
-//   //get获得表单页面
-//   if (ctx.url === '/' && ctx.method === 'GET') {
-//     let html = `
-//             <h1>Koa2 request POST</h1>
-//             <form method="POST" action="/">
-//                 <p>userName</p>
-//                 <input name="userName" /><br/>
-//                 <p>age</p>
-//                 <input name="age" /><br/>
-//                 <button type="submit">submit</button>
-//             </form>
-//         `;
-//     ctx.body = html;
-//   }
-//   //post提交表单信息
-//   else if (ctx.url === '/' && ctx.method === 'POST') {
-//     let pastData = await parsePostData(ctx);
-//     ctx.body = pastData;
-//   }
-//   else {
-//     ctx.body = '<h1>404!</h1>';
-//   }
-// })
-
 //设置cookies
 app.keys = ['im a newer secret', 'i like turtle2'];
 
 //应用级错误
-app.on('error', (err) => {
-  console.log('server error', err);
-});
+// app.on('error', (err) => {
+//   console.log('server error', err);
+// });
 
 // 监听端口
 app.listen(port, () => {

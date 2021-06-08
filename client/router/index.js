@@ -12,6 +12,16 @@ const routerConfig = [
     exact: true,
   },
   {
+    path: '/login',
+    component: LazyMoudle(() => ({
+      entry: import(/* webpackChunkName: "pagesHome" */ '@Client/views/login'),
+      // models: [import(/* webpackChunkName: "pagesHomeModel" */ '@Client/views/home/model'), import(/* webpackChunkName: "pagesHomeModel" */ '@Client/views/home/modelTest')],
+    })),
+    breadcrumbName: '登录',
+    title: '登录',
+    exact: true,
+  },
+  {
     path: '/main',
     component: LazyMoudle(() => ({
       entry: import(/* webpackChunkName: "pagesMain" */ '@Client/views/main'),
